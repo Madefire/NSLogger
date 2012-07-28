@@ -332,7 +332,7 @@ void LoggerStart(Logger *logger)
 	if (logger == NULL)
 		logger = LoggerGetDefaultLogger();
 
-	if (logger->workerThread == NULL)
+	if (logger != NULL && logger->workerThread == NULL)
 	{
 		// Start the work thread which performs the Bonjour search,
 		// connects to the logging service and forwards the logs
@@ -2236,7 +2236,7 @@ void LogEndBlockTo(Logger *logger)
 		LoggerStart(logger);
 	}
 
-	if (logger->options & kLoggerOption_LogToConsole)
+	if (logger != NULL && logger->options & kLoggerOption_LogToConsole)
 		return;
 	
 	int32_t seq = OSAtomicIncrement32Barrier(&logger->messageSeq);
@@ -2284,7 +2284,8 @@ void LogMarkerTo(Logger *logger, NSString *text)
 			CFStringRef str = CFDateFormatterCreateStringWithAbsoluteTime(NULL, df, CFAbsoluteTimeGetCurrent());
 			CFRelease(df);
 			LoggerMessageAddString(encoder, str, PART_KEY_MESSAGE);
-			CFRelease(str);
+			if (str)
+                CFRelease(str);
 		}
 		else
 		{
