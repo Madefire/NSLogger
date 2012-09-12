@@ -1567,6 +1567,8 @@ static void LoggerWriteStreamCallback(CFWriteStreamRef ws, CFStreamEventType eve
 			else
 				LoggerTryConnect(logger);
 			break;
+        default:
+            break;
 	}
 }
 
